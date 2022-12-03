@@ -16,3 +16,13 @@ ips = input.map do |items|
 end.to_a
 
 pp ips.sum
+
+### Part 2
+
+badges = input.each_slice(3).map do |group|
+  badge = group[0].chars.intersection(group[1].chars, group[2].chars).first
+
+  priorities.index(badge) + 1
+end
+
+pp badges.sum
