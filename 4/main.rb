@@ -1,4 +1,4 @@
-# path = './sample.txt'
+path = './sample.txt'
 path = './input.txt'
 
 input = IO.readlines(path, chomp: true)
@@ -10,8 +10,8 @@ overlaps = input.filter do |input_line|
 
   overlap = range1.to_a.intersection range2.to_a
 
-  pp overlap
-  overlap == range1.to_a || overlap == range2.to_a
+  # pp overlap
+  overlap.any?
 end
 
 pp overlaps.size
