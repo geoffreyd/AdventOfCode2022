@@ -7,9 +7,10 @@ input = IO.readlines(path, chomp: true)
 
 drawing, instructions = input.slice_after('').to_a
 
-stacks_nos = drawing[-2].chars
+drawing.pop # remove empty line
+stacks_nos = drawing[-1].chars
 
-crates = drawing[0...-2].map(&:chars)
+crates = drawing[0...-1].map(&:chars)
 
 stacks = {}
 
