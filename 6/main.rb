@@ -6,8 +6,8 @@ line = IO.readlines(path, chomp: true).first
 part2 = false
 offset = part2 ? 14 : 4
 
-marker = line.chars.each_cons(offset).find do |bytes|
-  bytes.uniq.size == offset
+marker, idx = line.chars.each_cons(offset).with_index.find do |chars, _|
+  chars.uniq.size == offset
 end
 
-pp line.index(marker.join) + offset
+pp idx + offset
