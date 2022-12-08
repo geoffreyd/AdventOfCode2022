@@ -51,4 +51,28 @@ things = dirs.map do |k, v|
 end.flatten
 
 pp "----"
-pp things.sum
+# pp things.sum
+
+### Part 2
+
+FULL = 70000000
+NEEDED = 30000000
+# CURRENT = dirs[""]
+CURRENT = 43984248
+to_remove = CURRENT - NEEDED
+
+pp "Using #{CURRENT} of #{FULL}"
+pp "We need to remove #{to_remove}"
+
+candidates = dirs.select do |k, v|
+  v >= to_remove
+end
+
+sizes = dirs.each_pair.sort_by { _2 }
+pp "---"
+pp sizes
+pp "---"
+
+answer = sizes.first(10)
+
+pp answer
