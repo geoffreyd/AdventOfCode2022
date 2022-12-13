@@ -54,7 +54,29 @@ messages = lines.slice_after('').map.with_index do |group, idx|
   result = compare(pair)
   puts "=> #{result}"
 
+  raise "NIL!" if result.nil?
   [idx + 1, result.nil? ? nil : result < 0]
 end
 
 puts messages.filter { _1[1] == true}.map { _1[0] }.sum
+
+
+## Part 2
+
+messages = lines.slice_after('').map.with_index do |group, idx|
+  pair = group.reject{_1 == ""}.map { |line|
+    list = JSON.parse(line)
+  }
+end.flatten(1)
+
+messages.push([[2]], [[6]])
+
+messages.sort! do |a, b|
+  compare([a, b])
+end
+
+first = messages.index([[2]]) + 1
+second = messages.index([[6]]) + 1
+
+puts "First: #{first}, Second: #{second}"
+puts "Answer: #{first * second}"
