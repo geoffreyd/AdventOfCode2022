@@ -76,15 +76,17 @@ def bfs(grid, starting_point, destination)
 
   path = []
   current_point = destination
-  while current_point != starting_point || path.length > 10000
+  # while current_point != starting_point
+  while @elevations.index(grid[current_point[1]][current_point[0]]) != 0
     path << current_point
     current_point = parent[current_point]
     throw "nil point" if current_point.nil?
   end
-  path << starting_point
+  path << current_point
   path.reverse
 end
 
 path = bfs(grid, starting_point, destination)
 puts "Path: #{path}"
+puts "Elevations: #{path.map { |point| grid[point[1]][point[0]] }}"
 puts "Path length: #{path.size - 1}"
