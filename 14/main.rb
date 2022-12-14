@@ -56,15 +56,23 @@ end
 
 print_grid(@grid)
 
-@max_y = @grid.keys.map { |_, y| y }.max
-@off_the_edge = false
+@max_y = @grid.keys.map { |_, y| y }.max + 2
+@min_rock_x, @max_rock_x = @grid.keys.map { |x, _| x }.minmax
+@is_full = false
 
 def fall(x,y)
-  if y > @max_y
-    @off_the_edge = true
-    return
+  # distance_from_center = (x + 1 - 500).abs
+  if (x > @max_rock_x + 2 || x < @min_rock_x - 2)
+    @grid[[x, y]] = '|'
+    return;
   end
+
   new_y = y + 1
+  if new_y == @max_y
+    @grid[[x, @max_y]] ||= '#'
+    @grid[[x-1, @max_y]] ||= '#'
+    @grid[[x+1, @max_y]] ||= '#'
+  end
   if @grid[[x, new_y]].nil?
     return fall(x, new_y)
   end
@@ -76,12 +84,16 @@ def fall(x,y)
     fall(x+1, new_y)
   else
     # we can't fall, and we can't spread
+    if [x, y] == [500, 0]
+      @is_full = true
+      return
+    end
     @grid[[x, y]] = 'o'
   end
 end
 
 sand = 0
-until @off_the_edge
+until @is_full
   starts = [500,0]
   sand += 1
   fall(*starts)
@@ -89,9 +101,18 @@ until @off_the_edge
   puts "After #{sand} sand:"
   print_grid(@grid)
 
-  break if sand > 1000
+  # break if sand > 1000
 end
 
-puts @grid
+# puts @grid
 
-puts "answer: #{sand - 1}"
+puts "answer: #{sand}"
+
+# find man max y for '|' greater than x 500
+right = @grid.keys.select { |x, y| @grid[[x, y]] == '|' && x > 500 }.map { |_, y| y }.minmax
+right_sand = (right[1] - right[0]).times.map { _1 + 1}.sum
+left = @grid.keys.select { |x, y| @grid[[x, y]] == '|' && x < 500 }.map { |_, y| y }.minmax
+left_sand = (left[1] - left[0]).times.map { _1 + 1}.sum
+
+puts "sand: #{sand} + #{right_sand} + #{left_sand}"
+puts "answer: #{sand + right_sand + left_sand}"
