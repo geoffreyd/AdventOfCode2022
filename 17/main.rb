@@ -116,8 +116,8 @@ def fall_rock(shape_idx, input_idx, grid)
     end
     # render_test_grid(y_offset, shape, x_offset, y_offset, @grid)
   end
-  if @grid.count > 40 && !@has_jumped
-    grid_head_hash = @grid[-30..-1]
+  if @grid.count > 1000 && !@has_jumped
+    grid_head_hash = @grid[-35..-1]
     if @pattern_finder[grid_head_hash]
 
       prev_rocks, prev_height = @pattern_finder[grid_head_hash]
