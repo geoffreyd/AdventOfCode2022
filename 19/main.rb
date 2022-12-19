@@ -42,7 +42,7 @@ pp "blueprints: #{blueprints}"
 
 def tick(path, minutes, supplies, robots, blueprint, skipped = [])
   geo_ratio = supplies[:geode]
-  return nil if geo_ratio + 2 < @largest[minutes]
+  return nil if geo_ratio + 1 < @largest[minutes]
 
   @largest[minutes] = geo_ratio if geo_ratio > @largest[minutes]
   # @tick[[minutes, supplies, robots, blueprint, skipped]] ||= begin
@@ -67,7 +67,7 @@ def tick(path, minutes, supplies, robots, blueprint, skipped = [])
     supplies[type] += count
   end
 
-  if minutes >= 24
+  if minutes >= 32
     # puts "finished run with geodes: #{supplies[:geode]}"
     return {m: minutes, s: supplies, r: robots, p: path}
   end
@@ -94,7 +94,7 @@ def tick(path, minutes, supplies, robots, blueprint, skipped = [])
   # end
 end
 
-options = blueprints.map.with_index(1) do |blueprint, idx|
+options = blueprints.first(3).map.with_index(1) do |blueprint, idx|
   puts "Checking blueprint #{idx}: #{blueprint}"
   current_supplies = supplies.dup
   current_robot = robots.dup
@@ -118,4 +118,4 @@ end
 
 pp options
 
-pp options.map { _1[2] }.sum
+pp options.map { _1[1] }.inject(&:*)
