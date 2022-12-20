@@ -5,7 +5,6 @@ source 'https://rubygems.org'
 gem 'iruby'
 
 gem 'byebug'
-gem 'debug'
 gem 'pry'
 
 gem 'rubocop', require: false
