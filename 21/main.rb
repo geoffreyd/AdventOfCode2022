@@ -11,21 +11,32 @@ end.to_h
 
 def answer(name)
   job = @monkeys[name]
+  return 'x' if name == 'humn'
   return job if job.is_a?(Integer)
 
   parts = job.split(' ')
-  left = parts[0].to_i
+  left = parts[0]
   op = parts[1]
-  right = parts[2].to_i
+  op = '=' if name == 'root'
+  right = parts[2]
+
+  left_eq = answer(left)
+  left_eq = eval(left_eq) if left_eq.is_a?(String) && !left_eq.include?('x')
+
+  right_eq = answer(right)
+  right_eq = eval(right_eq) if right_eq.is_a?(String) && !right_eq.include?('x')
+
   case [left, op, right]
-  in [Integer, '+', Integer]
-    answer(parts[0]) + answer(parts[2])
-  in [Integer, '*', Integer]
-    answer(parts[0]) * answer(parts[2])
-  in [Integer, '-', Integer]
-    answer(parts[0]) - answer(parts[2])
-  in [Integer, '/', Integer]
-    answer(parts[0]) / answer(parts[2])
+  in [_, '+', _]
+    "(#{left_eq}+#{right_eq})"
+  in [_, '*', _]
+    "(#{left_eq}*#{right_eq})"
+  in [_, '-', _]
+    "(#{left_eq}-#{right_eq})"
+  in [_, '/', _]
+    "(#{left_eq}/#{right_eq})"
+  in [_, '=', _]
+    "(#{left_eq} = #{right_eq})"
   else
     raise "Unknown job: #{job}"
   end
