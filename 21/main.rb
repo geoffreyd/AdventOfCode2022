@@ -9,37 +9,45 @@ lines = IO.readlines(path, chomp: true)
   [name, job]
 end.to_h
 
-def answer(name)
+@inverts = { '+' => '-', '-' => '+', '*' => '/', '/' => '*' }
+
+def simplify(args)
+  case args
+  in [Integer => left, op, Integer => right] if @inverts.keys.include?(op)
+    left.send(op, right)
+  else
+    args
+  end
+end
+
+def resolve(value, commands)
+  print "value: #{value} "
+  return value if commands == 'x'
+
+  left, op, right = commands
+  next_commands, x = left.is_a?(Numeric) ? [right, left] : [left, right]
+
+  puts " #{@inverts[op]} #{x}"
+  resolve(value.send(@inverts[op], x), next_commands)
+end
+
+def answer(name, part2)
   job = @monkeys[name]
-  return 'x' if name == 'humn'
+  return 'x' if name == 'humn' && part2
   return job if job.is_a?(Integer)
 
   parts = job.split(' ')
   left = parts[0]
-  op = parts[1]
-  op = '=' if name == 'root'
+  op = name == 'root' && part2 ? '=' : parts[1]
   right = parts[2]
 
-  left_eq = answer(left)
-  left_eq = eval(left_eq) if left_eq.is_a?(String) && !left_eq.include?('x')
-
-  right_eq = answer(right)
-  right_eq = eval(right_eq) if right_eq.is_a?(String) && !right_eq.include?('x')
-
-  case [left, op, right]
-  in [_, '+', _]
-    "(#{left_eq}+#{right_eq})"
-  in [_, '*', _]
-    "(#{left_eq}*#{right_eq})"
-  in [_, '-', _]
-    "(#{left_eq}-#{right_eq})"
-  in [_, '/', _]
-    "(#{left_eq}/#{right_eq})"
-  in [_, '=', _]
-    "(#{left_eq} = #{right_eq})"
-  else
-    raise "Unknown job: #{job}"
-  end
+  [simplify(answer(left, part2)), op, simplify(answer(right, part2))]
 end
 
-pp answer('root')
+p1_l, p1_op, p1_r = answer('root', false)
+puts "Part 1: #{p1_l} #{p1_op} #{p1_r} = #{p1_l.send(p1_op, p1_r)}"
+
+commands, _, value = answer('root', true)
+# pp commands
+
+pp resolve(value, commands)
